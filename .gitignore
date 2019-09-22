@@ -120,4 +120,13 @@ venv.bak/
 dmypy.json
 
 # Pyre type checker
-.pyre/
+.pyre/\
+
+
+
+
+#=== virtual env
+open-interest/
+settings.py
+market_maker/
+.vscode/
