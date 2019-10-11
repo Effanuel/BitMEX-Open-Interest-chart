@@ -57,7 +57,7 @@ class Chart(OrderManager):
         # start, end = ax1[1].get_xlim()
         # ax1[1].yaxis.set_ticks(np.arange(start, end, 1e9))
         # ax1[1].yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
-        ax1[1].set_xlim(left=max(0, i - 120), right=i + 5)
+        ax1[1].set_xlim(left=max(0, i - 720), right=i + 5)
         # ax2.set_xlim(left=max(0, i-50), right=i+5)
         # ax2.set_xlim(left=max(0, i-50), right=i+5)
         # ax1.get_xaxis().get_major_formatter().set_scientific(False)
