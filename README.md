@@ -17,7 +17,7 @@
 - [License](#license)
 - [Useful material](#useful-material)
 
-# BitMEX scaled orders tool
+## BitMEX-Open-Interest-chart
 
 This project is a program which displays BitMEX XBTUSD current price with Open-Interest
 
