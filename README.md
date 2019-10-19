@@ -73,7 +73,7 @@ virtualenv open-interest
 
 2.1 Activate virtual environment:
 ```sh
-.open/Scripts/activate
+./open-interest/Scripts/activate
 ```
 
 3. Install dependencies for the virtual environment:
