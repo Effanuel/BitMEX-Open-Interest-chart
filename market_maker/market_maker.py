@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from time import sleep
 import sys
 from datetime import datetime
-from os.path import getmtime
+from os.path import getmtime, join
 import random
 import requests
 import atexit
@@ -15,7 +15,14 @@ from market_maker.utils import log, constants, errors, math
 # Used for reloading the bot - saves modified times of key files
 import os
 
-watched_files_mtimes = [(f, getmtime(f)) for f in settings.WATCHED_FILES]
+watched_files_mtimes = [
+    (f, getmtime(f))
+    for f in [
+        join("market_maker", "market_maker.py"),
+        join("market_maker", "bitmex.py"),
+        "settings.py",
+    ]
+]
 
 
 #
@@ -30,15 +37,15 @@ class ExchangeInterface:
         if len(sys.argv) > 1:
             self.symbol = sys.argv[1]
         else:
-            self.symbol = settings.SYMBOL
+            self.symbol = "XBTUSD"
         self.bitmex = bitmex.BitMEX(
             base_url=settings.BASE_URL,
             symbol=self.symbol,
             apiKey=settings.API_KEY,
             apiSecret=settings.API_SECRET,
-            orderIDPrefix=settings.ORDERID_PREFIX,
-            postOnly=settings.POST_ONLY,
-            timeout=settings.TIMEOUT,
+            orderIDPrefix="mm_bitmex_",
+            postOnly=False,
+            timeout=7,
         )
 
     def get_instrument(self, symbol=None):
@@ -48,10 +55,7 @@ class ExchangeInterface:
 
     def get_margin(self):
         if self.dry_run:
-            return {
-                "marginBalance": float(settings.DRY_BTC),
-                "availableFunds": float(settings.DRY_BTC),
-            }
+            return {"marginBalance": float(50), "availableFunds": float(50)}
         return self.bitmex.funds()
 
     def get_position(self, symbol=None):
@@ -90,7 +94,7 @@ class ExchangeInterface:
 
 class OrderManager:
     def __init__(self):
-        self.exchange = ExchangeInterface(settings.DRY_RUN)
+        self.exchange = ExchangeInterface(False)
         # Once exchange is created, register exit handler that will always cancel orders
         # on any error.
         atexit.register(self.exit)
@@ -99,7 +103,7 @@ class OrderManager:
         logger.info("Using symbol %s." % self.exchange.symbol)
 
         logger.info(
-            "Order Manager initializing, connecting to BitMEX. Live run: executing real trades."
+            "Order Manager initializing, connecting to BitMEX. Fetching data..."
         )
 
         self.start_time = datetime.now()
