@@ -58,11 +58,11 @@ The majority of the code is taken from [Sample-market-maker](https://github.com/
 
 ### Installation
 
-1. Clone the repo or [download zip]():
+1. Clone the repo or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v1.0.zip):
 
 ```sh
 git clone ...
-cd Bitmex-Open-Interest-chart-master
+cd Bitmex-Open-Interest-chart
 ```
 
 2. Init a virtual environment _(highly recommended)_
@@ -100,7 +100,7 @@ python main.py
 #### TLDR setup:
 
 ```sh
-git clone https://github.com/Effanuel/Bitmex-Open-Interest-chart.git
+git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
 cd Bitmex-Open-Interest-chart
 virtualenv open-interest
 .open/Scripts/activate
