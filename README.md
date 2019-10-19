@@ -21,7 +21,7 @@ This project is a program which displays BitMEX XBTUSD current price with Open-I
 - Display XBTUSD price and Open Interest of XBTUSD every 5 seconds *(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)*
 - Customise chart colors and saved chart time in `settings.py` file:
 
-```
+```python
 SAVE_CHART_IN_SECONDS = 3600 # Default saves 1h of chart time
 PRICE_LINE_COLOR = "green"
 INTEREST_LINE_COLOR = "red"
@@ -79,7 +79,7 @@ pip install -r requirements.txt
 
 4. Enter your API keys in `settings.py`:
 
-```
+```python
 API_KEY = "qqSqebwbwymenrPxL3BjFsJHJv"
 API_SECRET = "hgcjYUk37frty2Vaaa-fNKYk0yla26a33ro34U53wVOFA333ab-"
 ```
