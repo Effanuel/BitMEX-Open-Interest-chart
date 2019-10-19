@@ -61,7 +61,7 @@ The majority of the code is taken from [Sample-market-maker](https://github.com/
 1. Clone the repo or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v1.0.zip):
 
 ```sh
-git clone ...
+git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
 cd Bitmex-Open-Interest-chart
 ```
 
