@@ -20,11 +20,12 @@ This project is a program which displays BitMEX XBTUSD current price with Open-I
 
 - Display XBTUSD price and Open Interest of XBTUSD every 5 seconds *(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)*
 - Customise chart colors and saved chart time in `settings.py` file:
+
 ```
 SAVE_CHART_IN_SECONDS = 3600 # Default saves 1h of chart time
 PRICE_LINE_COLOR = "green"
 INTEREST_LINE_COLOR = "red"
-``
+```
 
 ### Built With
 
@@ -70,20 +71,20 @@ virtualenv open-interest
 .open/Scripts/activate
 ```
 
-2. Install dependencies for the virtual environment:
+3. Install dependencies for the virtual environment:
 ```sh
 pip install -r requirements.txt
 ```
 
 
-3. Enter your API keys in `settings.py`:
+4. Enter your API keys in `settings.py`:
 
 ```
 API_KEY = "qqSqebwbwymenrPxL3BjFsJHJv"
 API_SECRET = "hgcjYUk37frty2Vaaa-fNKYk0yla26a33ro34U53wVOFA333ab-"
 ```
 
-4. Run the application:
+5. Run the application:
 
 ```sh
 python main.py
@@ -94,7 +95,7 @@ python main.py
 #### TLDR setup:
 
 ```sh
-git clone https://github.com/Effanuel/Bitmex-scaled-orders.git
+git clone https://github.com/Effanuel/Bitmex-Open-Interest-chart.git
 cd Bitmex-Open-Interest-chart
 virtualenv open-interest
 .open/Scripts/activate
