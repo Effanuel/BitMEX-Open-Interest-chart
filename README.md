@@ -12,17 +12,19 @@
 - [License](#license)
 - [Useful material](#useful-material)
 
-<p align="center"> 
-<img src="assets/interface_range_tool.png">
-</p>
-
 # BitMEX scaled orders tool
 
 This project is a program which displays BitMEX XBTUSD current price with Open-Interest
 
 ### Current Features
 
-- Display XBTUSD price and Open Interest of XBTUSD using Websocket with matplotlib.
+- Display XBTUSD price and Open Interest of XBTUSD every 5 seconds *(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)*
+- Customise chart colors and saved chart time in `settings.py` file:
+```
+SAVE_CHART_IN_SECONDS = 3600 # Default saves 1h of chart time
+PRICE_LINE_COLOR = "green"
+INTEREST_LINE_COLOR = "red"
+``
 
 ### Built With
 
@@ -54,7 +56,7 @@ The majority of the code is taken from [Sample-market-maker](https://github.com/
 
 ```sh
 git clone ...
-cd Bitmex-Open-Interest-chart-master/api
+cd Bitmex-Open-Interest-chart-master
 ```
 
 2. Init a virtual environment _(highly recommended)_
@@ -110,7 +112,7 @@ python main.py
 ##### Run application:
 
 ```sh
-cd Bitmex-scaled-orders/api
+cd Bitmex-Open-Interest-chart
 python main.py
 ```
 
@@ -119,6 +121,7 @@ python main.py
 
 - Save price and interest data to a file;
 - Read price/interest data to display on a chart;
+- Specify current price and Open Interest more clearly;
 
 <!-- LICENSE -->
 
