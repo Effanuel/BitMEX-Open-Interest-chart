@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import matplotlib.animation as animation
 from matplotlib import style
-import numpy as np
 
 import matplotlib.ticker as ticker
 
@@ -28,12 +27,18 @@ class CustomOrderManager(OrderManager):
         # ax1.plot(xs, ys1, color='g')
         # ax1.plot(xs, ys2, color='g')
 
-        color = "tab:green"
+        # PRICE CHARTING
+
+        if settings.PRICE_LINE_COLOR in ["red", "green", "blue", "purple"]:
+            price_color = settings.PRICE_LINE_COLOR
+        else:
+            price_color = "green"
+
         ax1[0].ticklabel_format(useOffset=False)
-        ax1[0].set_ylabel("Price", color=color)
+        ax1[0].set_ylabel("Price", color=price_color)
         ax1[0].grid(color="w", linestyle="-", linewidth=0.1)
-        ax1[0].plot(xs, ys1, color=color, linewidth=1)
-        ax1[0].tick_params(axis="y", labelcolor=color)
+        ax1[0].plot(xs, ys1, color=price_color, linewidth=1)
+        ax1[0].tick_params(axis="y", labelcolor=price_color)
 
         # instantiate a second axes that shares the same x-axis
 
@@ -45,34 +50,35 @@ class CustomOrderManager(OrderManager):
         # ax2.tick_params(axis='y', labelcolor=color)
 
         # save last 50 ticks
-        ax1[0].set_xlim(left=max(0, i - 720), right=i + 5)
 
-        color = "tab:red"
+        if settings.SAVE_CHART_IN_SECONDS >= 300:  # 5 minutes
+            save_time = settings.SAVE_CHART_IN_SECONDS / 5
+        else:
+            save_time = 300 / 5
+
+        ax1[0].set_xlim(left=max(0, i - save_time), right=i + 5)
+
+        if settings.INTEREST_LINE_COLOR in ["red", "green", "blue", "purple"]:
+            interest_color = settings.INTEREST_LINE_COLOR
+        else:
+            interest_color = "red"
+
         ax1[1].ticklabel_format(useOffset=False)
-        ax1[1].set_xlabel("time (s)")
+        ax1[1].set_xlabel("time (s)", color=interest_color)
 
-        ax1[1].set_ylabel("Open Interest", color=color)
-        ax1[1].plot(xs, ys2, color=color, linewidth=0.5)
-        ax1[1].tick_params(axis="y", labelcolor=color)
-        # start, end = ax1[1].get_xlim()
-        # ax1[1].yaxis.set_ticks(np.arange(start, end, 1e9))
-        # ax1[1].yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
-        ax1[1].set_xlim(left=max(0, i - 120), right=i + 5)
-        # ax2.set_xlim(left=max(0, i-50), right=i+5)
-        # ax2.set_xlim(left=max(0, i-50), right=i+5)
-        # ax1.get_xaxis().get_major_formatter().set_scientific(False)
-        # ax2.get_xaxis().get_major_formatter().set_scientific(False)
+        ax1[1].set_ylabel("Open Interest", color=interest_color)
+        ax1[1].plot(xs, ys2, color=interest_color, linewidth=0.5)
+        ax1[1].tick_params(axis="y", labelcolor=interest_color)
+
+        ax1[1].set_xlim(left=max(0, i - save_time), right=i + 5)
         ax1[1].grid(color="w", linestyle="-", linewidth=0.1)
         plt.tight_layout()
-        # plt.xlabel('Time(s)')
-        # plt.ylabel('Open Interest')
-        # plt.title('OI chart')
 
     def place_orders(self) -> None:
         ani = animation.FuncAnimation(fig, self.animate, interval=5000)
         plt.show()
 
-    def run_loop11(self) -> None:
+    def start(self) -> None:
         while True:
             sys.stdout.write("-----\n")
             sys.stdout.flush()
@@ -91,10 +97,7 @@ class CustomOrderManager(OrderManager):
 
 
 # Creates desired orders and converges to existing orders
-
-
 # fig = plt.figure()
-
 fig, ax1 = plt.subplots(2)
 # ax2 = ax1.twinx()
 # ax2 = ax1.twinx()
@@ -107,7 +110,8 @@ def run_program() -> None:
     order_manager = CustomOrderManager()
     # Try/except just keeps ctrl-c from printing an ugly stacktrace
     try:
-        order_manager.run_loop11()
+        sys.exit()
+        order_manager.start()
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
 
