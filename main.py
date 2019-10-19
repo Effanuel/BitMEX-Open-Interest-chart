@@ -28,8 +28,20 @@ class Chart(OrderManager):
         # ax1.plot(xs, ys2, color='g')
 
         # PRICE CHARTING
+        color_arr = [
+            "tab:blue",
+            "tab:orange",
+            "tab:green",
+            "tab:red",
+            "tab:purple",
+            "tab:brown",
+            "tab:pink",
+            "tab:gray",
+            "tab:olive",
+            "tab:cyan",
+        ]
 
-        if settings.PRICE_LINE_COLOR in ["red", "green", "blue", "purple"]:
+        if settings.PRICE_LINE_COLOR in color_arr:
             price_color = settings.PRICE_LINE_COLOR
         else:
             price_color = "green"
@@ -58,13 +70,13 @@ class Chart(OrderManager):
 
         ax1[0].set_xlim(left=max(0, i - save_time), right=i + 5)
 
-        if settings.INTEREST_LINE_COLOR in ["red", "green", "blue", "purple"]:
+        if settings.INTEREST_LINE_COLOR in color_arr:
             interest_color = settings.INTEREST_LINE_COLOR
         else:
             interest_color = "red"
 
         ax1[1].ticklabel_format(useOffset=False)
-        ax1[1].set_xlabel("time (s)", color=interest_color)
+        ax1[1].set_xlabel("ticks (1 tick = 5s)", color=interest_color)
 
         ax1[1].set_ylabel("Open Interest", color=interest_color)
         ax1[1].plot(xs, ys2, color=interest_color, linewidth=0.5)
