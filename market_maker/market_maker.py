@@ -112,13 +112,13 @@ class OrderManager:
 
     def reset(self):
         # Create orders and converge.
-        self.place_orders()
+        self.chart()
 
     ###
     # Orders
     ###
 
-    def place_orders(self):
+    def chart(self):
         """Create order items for use in convergence."""
         pass
 
