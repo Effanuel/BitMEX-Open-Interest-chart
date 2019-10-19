@@ -127,5 +127,6 @@ dmypy.json
 
 #=== virtual env
 open-interest/
+open/
 settings.py
 .vscode/

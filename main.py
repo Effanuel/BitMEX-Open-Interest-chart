@@ -14,7 +14,7 @@ style.use("dark_background")
 mpl.rcParams["toolbar"] = "None"
 
 
-class CustomOrderManager(OrderManager):
+class Chart(OrderManager):
     """A sample order manager for implementing your own custom strategy"""
 
     def animate(self, i) -> None:
@@ -107,11 +107,11 @@ ys2 = []
 
 
 def run_program() -> None:
-    order_manager = CustomOrderManager()
+    chart = Chart()
     # Try/except just keeps ctrl-c from printing an ugly stacktrace
     try:
         sys.exit()
-        order_manager.start()
+        chart.start()
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
 
