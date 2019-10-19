@@ -4,7 +4,6 @@
   <img src='https://github.com/Effanuel/BitMEX-Open-Interest-chart/blob/master/assets/chart.png'>
 </p>
 
-
 ## Table of Contents
 
 - [Current Features](#current-features)
@@ -23,7 +22,7 @@ This project is a program which displays BitMEX XBTUSD current price with Open-I
 
 ### Current Features
 
-- Display XBTUSD price and Open Interest of XBTUSD every 5 seconds *(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)*
+- Display XBTUSD price and Open Interest of XBTUSD every 5 seconds _(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)_
 - Customise chart colors and saved chart time in `settings.py` file:
 
 ```python
@@ -38,18 +37,18 @@ The majority of the code is taken from [Sample-market-maker](https://github.com/
 
 - [Sample-market-maker](https://github.com/BitMEX/sample-market-maker) + [Matplotlib](https://matplotlib.org/)
 
-
 <!-- GETTING STARTED -->
 
 ## Getting Started
 
 - Go to https://www.bitmex.com
+
 * Get API keys:
   - Account > API keys > Create API key;
     - **Key Permissions** : -;
     - **Withdraw**: Unchecked;
 
-*(Freshly created account with API keys also works)*
+_(Freshly created account with API keys also works)_
 
 ### Prerequisites
 
@@ -66,21 +65,23 @@ cd Bitmex-Open-Interest-chart
 ```
 
 2. Init a virtual environment _(highly recommended)_
+
 ```sh
 virtualenv open-interest
-.open/Scripts/activate
+./open-interest/Scripts/activate
 ```
 
 2.1 Activate virtual environment:
+
 ```sh
 ./open-interest/Scripts/activate
 ```
 
 3. Install dependencies for the virtual environment:
+
 ```sh
 pip install -r requirements.txt
 ```
-
 
 4. Enter your API keys in `settings.py`:
 
@@ -122,7 +123,6 @@ cd Bitmex-Open-Interest-chart
 python main.py
 ```
 
-
 ## Roadmap
 
 - Save price and interest data to a file;
@@ -143,5 +143,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - [Crypto news](https://cointelegraph.com/)
 - [BitMEX position calculator](https://blockchainwhispers.com/bitmex-position-calculator/)
 - [Crypto sentiment/statistics tool](https://thetie.io/)
-
-
