@@ -128,5 +128,5 @@ dmypy.json
 #=== virtual env
 open-interest/
 open/
-settings.py
+market_maker/settings.py
 .vscode/
