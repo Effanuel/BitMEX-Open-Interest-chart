@@ -1,5 +1,10 @@
 # BitMEX-Open-Interest-chart
 
+<p align="center"> 
+  <img src='https://github.com/Effanuel/BitMEX-Open-Interest-chart/blob/master/assets/chart.png'>
+</p>
+
+
 ## Table of Contents
 
 - [Current Features](#current-features)
