@@ -68,13 +68,13 @@ cd Bitmex-Open-Interest-chart
 
 ```sh
 virtualenv open-interest
-./open-interest/Scripts/activate
+.\open-interest\Scripts\activate
 ```
 
 2.1 Activate virtual environment:
 
 ```sh
-./open-interest/Scripts/activate
+.\open-interest\Scripts\activate
 ```
 
 3. Install dependencies for the virtual environment:
