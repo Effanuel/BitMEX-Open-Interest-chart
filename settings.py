@@ -1,15 +1,18 @@
 from os.path import join
 import logging
 
-########################################################################################################################
-# Connection/Auth
-########################################################################################################################
+
+# True or False
+EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE = False
 
 # API URL.
 BASE_URL = "https://www.bitmex.com/api/v1/"
 
+########################################################################################################################
+# Connection/Auth
+########################################################################################################################
 
-# The BitMEX API requires permanent API keys. Go to https://testnet.bitmex.com/app/apiKeys to fill these out.
+# The BitMEX API requires permanent API keys. Go to https://www.bitmex.com/app/apiKeys to fill these out.
 API_KEY = ""
 API_SECRET = ""
 
@@ -32,6 +35,6 @@ SAVE_CHART_IN_SECONDS = 3600
 PRICE_LINE_COLOR = "green"
 INTEREST_LINE_COLOR = "red"
 
-
-LOG_LEVEL = logging.INFO
+# ---
+# LOG_LEVEL = logging.INFO
 CONTRACTS = ["XBTUSD"]

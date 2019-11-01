@@ -1,7 +1,10 @@
 import sys
+import csv
 from time import sleep
+
 import settings
 import random
+
 from market_maker.market_maker import OrderManager
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -10,6 +13,8 @@ from matplotlib import style
 
 import matplotlib.ticker as ticker
 
+# For exporting
+from pandas import DataFrame
 
 # Style adjustments for matplotlib
 style.use("dark_background")
@@ -18,9 +23,9 @@ mpl.rcParams["toolbar"] = "None"
 # Figures
 fig, ax1 = plt.subplots(2)
 # Arrays to display data using matplotlib
-xs = []
-ys1 = []
-ys2 = []
+ticks_array = []
+price_data = []
+open_interest_data = []
 
 
 # Inheritance from sample-market-maker class OrderManager
@@ -30,13 +35,16 @@ class Chart(OrderManager):
     def animate(self, i) -> None:
 
         # On each iteration appends values to an array to display later
-        xs.append(i)
+        ticks_array.append(i)
         # Gets current price of XBTUSD
-        y1 = self.exchange.get_instrument()["lastPrice"]
+        price_tick = self.exchange.get_instrument("XBTUSD")["lastPrice"]
         # Gets Open Interest of XBTUSD
-        y2 = self.exchange.get_instrument()["openInterest"] / 1000000
-        ys1.append(y1)
-        ys2.append(y2)
+        open_interest_tick = (
+            self.exchange.get_instrument("XBTUSD")["openInterest"] / 1000000
+        )
+
+        price_data.append(price_tick)
+        open_interest_data.append(open_interest_tick)
 
         # Colors for the chart
         color_arr = [
@@ -71,7 +79,7 @@ class Chart(OrderManager):
         ax1[0].ticklabel_format(useOffset=False)
         ax1[0].set_ylabel("Price", color=price_color)
         ax1[0].grid(color="w", linestyle="-", linewidth=0.1)
-        ax1[0].plot(xs, ys1, color=price_color, linewidth=1)
+        ax1[0].plot(ticks_array, price_data, color=price_color, linewidth=1)
         ax1[0].tick_params(axis="y", labelcolor=price_color)
         ax1[0].set_xlim(left=max(0, i - save_time), right=i + 5)
 
@@ -79,7 +87,9 @@ class Chart(OrderManager):
         ax1[1].ticklabel_format(useOffset=False)
         ax1[1].set_xlabel("ticks (1 tick = 5s)", color=interest_color)
         ax1[1].set_ylabel("Open Interest", color=interest_color)
-        ax1[1].plot(xs, ys2, color=interest_color, linewidth=0.5)
+        ax1[1].plot(
+            ticks_array, open_interest_data, color=interest_color, linewidth=0.5
+        )
         ax1[1].tick_params(axis="y", labelcolor=interest_color)
         ax1[1].set_xlim(left=max(0, i - save_time), right=i + 5)
         ax1[1].grid(color="w", linestyle="-", linewidth=0.1)
@@ -93,16 +103,62 @@ class Chart(OrderManager):
     def start(self) -> None:
         pass
 
+    # Exports collected data of price and OI to a file
+    def export_data_to_csv(self, file_name) -> None:
+        print("hello")
+        # CSV headers
+        data = {
+            "Ticks": ticks_array,
+            "Price": price_data,
+            "Open-Interest": open_interest_data,
+        }
+        # Creates dataframe to export
+        df = DataFrame(data, columns=["Ticks", "Price", "Open-Interest"])
+        # Exports to file data.csv (not currently appending)
+        export_csv = df.to_csv(f"./{file_name}", index=None, header=True)
+
 
 # MAIN FUNCTION
 def run_program() -> None:
     """
-    This class initialization calls constructor inherited OrderManager
+    This class initialization calls inherited constructor OrderManager
     which calls chart function
     """
     try:
-        chart = Chart()  # Is alive while the chart window is opened
-        sys.exit()  # Closes the program if chart window is closed
+        if len(sys.argv) == 2:
+            x = []
+            y = []
+            z = []
+
+            try:
+                # Read file
+                with open(sys.argv[1], "r") as csv_file:
+                    plots = csv.DictReader(csv_file, delimiter=",")
+                    for row in plots:
+                        x.append(float(row["Ticks"]))
+                        y.append(float(row["Price"]))
+                        z.append(float(row["Open-Interest"]))
+                # INIT PRICE CHART
+                ax1[0].plot(x, y, color="tab:red", linewidth=1)
+                ax1[0].set_ylabel("Price", color="tab:red")
+                # INIT OPEN-INTEREST CHART
+                ax1[1].plot(x, z, color="tab:purple", linewidth=1)
+                ax1[1].set_xlabel("Ticks (1 tick = 5s)", color="tab:purple")
+                ax1[1].set_ylabel("Open Interest", color="tab:purple")
+
+                plt.tight_layout()
+                plt.show()
+            except (OSError, IOError) as e:
+                print("Wrong file name.")
+            except KeyError as e:
+                print("Wrong file format.")
+
+        else:
+            chart = Chart()  # Is alive while the chart window is opened
+            if settings.EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE is True:
+                chart.export_data_to_csv("data.csv")  # Export data to csv file
+            else:
+                sys.exit()  # Closes the program if chart window is closed
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
 

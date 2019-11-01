@@ -18,17 +18,22 @@
 
 ## BitMEX-Open-Interest-chart
 
-This project is a program which displays BitMEX XBTUSD current price with Open-Interest
+This project is a program which displays BitMEX XBTUSD **current price** with **Open-Interest**
 
 ### Current Features
 
-- Display XBTUSD price and Open Interest of XBTUSD every 5 seconds _(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)_
+- Display XBTUSD price and Open Interest of XBTUSD every 5 seconds _(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)_;
+- Saves price and interest data to a file;
+- Read price/interest data to display on a chart;
 - Customise chart colors and saved chart time in `settings.py` file:
 
 ```python
-SAVE_CHART_IN_SECONDS = 3600 # Default saves 1h of chart time
+SAVE_CHART_IN_SECONDS = 1800 # Default saves 30 minutes of chart time
 PRICE_LINE_COLOR = "green"
 INTEREST_LINE_COLOR = "red"
+
+# To export data to new file, to read later
+EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE = False
 ```
 
 ### Built With
@@ -57,43 +62,49 @@ _(Freshly created account with API keys also works)_
 
 ### Installation
 
-1. Clone the repo or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v1.0.zip):
+1. **Clone the repo** or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v2.0.zip):
 
 ```sh
 git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
 cd Bitmex-Open-Interest-chart
 ```
 
-2. Init a virtual environment _(highly recommended)_
+2. **Init a virtual environment** _(highly recommended)_
 
 ```sh
 virtualenv open-interest
 .\open-interest\Scripts\activate
 ```
 
-2.1 Activate virtual environment:
+   2.1 **Activate virtual environment**:
 
 ```sh
 .\open-interest\Scripts\activate
 ```
 
-3. Install dependencies for the virtual environment:
+3. **Install dependencies** for the virtual environment:
 
 ```sh
 pip install -r requirements.txt
 ```
 
-4. Enter your API keys in `settings.py`:
+4. **Enter your API keys** in `settings.py`:
 
 ```python
-API_KEY = "qqSqebwbwymenrPxL3BjFsJHJv"
-API_SECRET = "hgcjYUk37frty2Vaaa-fNKYk0yla26a33ro34U53wVOFA333ab-"
+API_KEY = "<INSERT HERE>"
+API_SECRET = "<INSERT HERE>"
 ```
 
-5. Run the application:
+5. **Run live charting of Price and Open-Interest**:
 
 ```sh
 python main.py
+```
+
+6. **Read data from a csv file**:
+
+```
+python main.py data.csv
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -104,7 +115,7 @@ python main.py
 git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
 cd Bitmex-Open-Interest-chart
 virtualenv open-interest
-.open/Scripts/activate
+.open-interest\Scripts\activate
 ```
 
 - Put API keys in `settings.py`;
@@ -125,8 +136,6 @@ python main.py
 
 ## Roadmap
 
-- Save price and interest data to a file;
-- Read price/interest data to display on a chart;
 - Specify current price and Open Interest more clearly;
 
 <!-- LICENSE -->
