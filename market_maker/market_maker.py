@@ -34,10 +34,10 @@ logger = log.setup_custom_logger("root")
 class ExchangeInterface:
     def __init__(self, dry_run=False):
         self.dry_run = dry_run
-        if len(sys.argv) > 1:
-            self.symbol = sys.argv[1]
-        else:
-            self.symbol = "XBTUSD"
+        # if len(sys.argv) > 1:
+        #     self.symbol = sys.argv[1]
+        # else:
+        self.symbol = "XBTUSD"
         self.bitmex = bitmex.BitMEX(
             base_url=settings.BASE_URL,
             symbol=self.symbol,
