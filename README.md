@@ -22,11 +22,13 @@ This project is a program which displays BitMEX XBTUSD current price with Open-I
 
 ### Current Features
 
-- Display XBTUSD price and Open Interest of XBTUSD every 5 seconds _(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)_
+- Display XBTUSD price and Open Interest of XBTUSD every 5 seconds _(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)_;
+- Save price and interest data to a file;
+- Read price/interest data to display on a chart;
 - Customise chart colors and saved chart time in `settings.py` file:
 
 ```python
-SAVE_CHART_IN_SECONDS = 3600 # Default saves 1h of chart time
+SAVE_CHART_IN_SECONDS = 1800 # Default saves 30 minutes of chart time
 PRICE_LINE_COLOR = "green"
 INTEREST_LINE_COLOR = "red"
 ```
@@ -57,7 +59,7 @@ _(Freshly created account with API keys also works)_
 
 ### Installation
 
-1. Clone the repo or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v1.0.zip):
+1. Clone the repo or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v2.0.zip):
 
 ```sh
 git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
@@ -68,13 +70,13 @@ cd Bitmex-Open-Interest-chart
 
 ```sh
 virtualenv open-interest
-./open-interest/Scripts/activate
+.\open-interest\Scripts\activate
 ```
 
 2.1 Activate virtual environment:
 
 ```sh
-./open-interest/Scripts/activate
+.\open-interest\Scripts\activate
 ```
 
 3. Install dependencies for the virtual environment:
@@ -104,7 +106,7 @@ python main.py
 git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
 cd Bitmex-Open-Interest-chart
 virtualenv open-interest
-.open/Scripts/activate
+.open-interest\Scripts\activate
 ```
 
 - Put API keys in `settings.py`;
@@ -125,8 +127,6 @@ python main.py
 
 ## Roadmap
 
-- Save price and interest data to a file;
-- Read price/interest data to display on a chart;
 - Specify current price and Open Interest more clearly;
 
 <!-- LICENSE -->
