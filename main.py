@@ -1,7 +1,10 @@
 import sys
+import csv
 from time import sleep
+
 import settings
 import random
+
 from market_maker.market_maker import OrderManager
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -34,9 +37,11 @@ class Chart(OrderManager):
         # On each iteration appends values to an array to display later
         ticks_array.append(i)
         # Gets current price of XBTUSD
-        price_tick = self.exchange.get_instrument()["lastPrice"]
+        price_tick = self.exchange.get_instrument("XBTUSD")["lastPrice"]
         # Gets Open Interest of XBTUSD
-        open_interest_tick = self.exchange.get_instrument()["openInterest"] / 1000000
+        open_interest_tick = (
+            self.exchange.get_instrument("XBTUSD")["openInterest"] / 1000000
+        )
 
         price_data.append(price_tick)
         open_interest_data.append(open_interest_tick)
@@ -120,11 +125,40 @@ def run_program() -> None:
     which calls chart function
     """
     try:
-        chart = Chart()  # Is alive while the chart window is opened
-        if settings.EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE is True:
-            chart.export_data_to_csv("data.csv")  # Export data to csv file
+        if len(sys.argv) == 2:
+            x = []
+            y = []
+            z = []
+
+            try:
+                # Read file
+                with open(sys.argv[1], "r") as csv_file:
+                    plots = csv.DictReader(csv_file, delimiter=",")
+                    for row in plots:
+                        x.append(float(row["Ticks"]))
+                        y.append(float(row["Price"]))
+                        z.append(float(row["Open-Interest"]))
+                # INIT PRICE CHART
+                ax1[0].plot(x, y, color="tab:red", linewidth=1)
+                ax1[0].set_ylabel("Price", color="tab:red")
+                # INIT OPEN-INTEREST CHART
+                ax1[1].plot(x, z, color="tab:purple", linewidth=1)
+                ax1[1].set_xlabel("Ticks (1 tick = 5s)", color="tab:purple")
+                ax1[1].set_ylabel("Open Interest", color="tab:purple")
+
+                plt.tight_layout()
+                plt.show()
+            except (OSError, IOError) as e:
+                print("Wrong file name.")
+            except KeyError as e:
+                print("Wrong file format.")
+
         else:
-            sys.exit()  # Closes the program if chart window is closed
+            chart = Chart()  # Is alive while the chart window is opened
+            if settings.EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE is True:
+                chart.export_data_to_csv("data.csv")  # Export data to csv file
+            else:
+                sys.exit()  # Closes the program if chart window is closed
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
 
