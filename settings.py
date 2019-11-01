@@ -3,7 +3,7 @@ import logging
 
 
 # True or False
-EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE = True
+EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE = False
 
 # API URL.
 BASE_URL = "https://www.bitmex.com/api/v1/"
