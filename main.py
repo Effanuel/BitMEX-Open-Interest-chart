@@ -27,6 +27,87 @@ ticks_array = []
 price_data = []
 open_interest_data = []
 
+# Colors for the chart
+color_arr = [
+    "blue",
+    "orange",
+    "green",
+    "red",
+    "purple",
+    "brown",
+    "pink",
+    "gray",
+    "olive",
+    "cyan",
+]
+# Get price line color from settings
+if settings.PRICE_LINE_COLOR in color_arr:
+    price_color = settings.PRICE_LINE_COLOR
+else:
+    price_color = "green"
+# Get interest line color from settings
+if settings.INTEREST_LINE_COLOR in color_arr:
+    interest_color = settings.INTEREST_LINE_COLOR
+else:
+    interest_color = "red"
+# Get line save time from settings
+if settings.SAVE_CHART_IN_SECONDS >= 300:  # 5 minutes
+    save_time = settings.SAVE_CHART_IN_SECONDS / 5
+else:
+    save_time = 300 / 5
+
+if settings.HOVER_LINE_COLOR in color_arr:
+    hover_color = settings.HOVER_LINE_COLOR
+else:
+    hover_color = "purple"
+
+
+x = []  # Ticks from data file
+y = []  # Price from data file
+z = []  # Open-Interest from data file
+v_lines = bool(settings.ENABLE_VERTICAL_LINES_ON_HOVER)
+h_lines = bool(settings.ENABLE_HORIZONTAL_LINES_ON_HOVER)
+
+
+def readData(file_name) -> None:
+    with open(file_name, "r") as csv_file:
+        plots = csv.DictReader(csv_file, delimiter=",")
+        for row in plots:
+            x.append(float(row["Ticks"]))
+            y.append(float(row["Price"]))
+            z.append(float(row["Open-Interest"]))
+
+
+def onMouseEvent(event):
+    if not event.inaxes:
+        try:
+            ax1[0].lines.pop(1)
+            ax1[1].lines.pop(1)
+            plt.draw()
+        except:
+            return
+        return
+    ax1[0].lines = [ax1[0].lines[0]]
+    ax1[1].lines = [ax1[1].lines[0]]
+
+    # INIT VERTICAL LINES
+    if v_lines:
+        ax1[0].axvline(x=event.xdata, color=hover_color, linestyle="--", linewidth=0.5)
+        ax1[1].axvline(x=event.xdata, color=hover_color, linestyle="--", linewidth=0.5)
+
+    # INIT HORIZONTAL LINES
+    if h_lines:
+        ax1[0].axhline(
+            y=y[int(event.xdata)], color=hover_color, linestyle="--", linewidth=0.5
+        )
+
+        ax1[1].axhline(
+            y=z[int(event.xdata)], color=hover_color, linestyle="--", linewidth=0.5
+        )
+
+    # ax1[1].axvline(x=event.xdata, color="k")
+    plt.draw()
+
 
 # Inheritance from sample-market-maker class OrderManager
 class Chart(OrderManager):
@@ -45,35 +126,6 @@ class Chart(OrderManager):
 
         price_data.append(price_tick)
         open_interest_data.append(open_interest_tick)
-
-        # Colors for the chart
-        color_arr = [
-            "tab:blue",
-            "tab:orange",
-            "tab:green",
-            "tab:red",
-            "tab:purple",
-            "tab:brown",
-            "tab:pink",
-            "tab:gray",
-            "tab:olive",
-            "tab:cyan",
-        ]
-        # Get price line color from settings
-        if settings.PRICE_LINE_COLOR in color_arr:
-            price_color = settings.PRICE_LINE_COLOR
-        else:
-            price_color = "green"
-        # Get interest line color from settings
-        if settings.INTEREST_LINE_COLOR in color_arr:
-            interest_color = settings.INTEREST_LINE_COLOR
-        else:
-            interest_color = "red"
-        # Get line save time from settings
-        if settings.SAVE_CHART_IN_SECONDS >= 300:  # 5 minutes
-            save_time = settings.SAVE_CHART_IN_SECONDS / 5
-        else:
-            save_time = 300 / 5
 
         # INIT PRICE CHART
         ax1[0].ticklabel_format(useOffset=False)
@@ -97,7 +149,9 @@ class Chart(OrderManager):
         plt.tight_layout()
 
     def chart(self) -> None:
+
         ani = animation.FuncAnimation(fig, self.animate, interval=5000)
+
         plt.show()
 
     def start(self) -> None:
@@ -126,25 +180,28 @@ def run_program() -> None:
     """
     try:
         if len(sys.argv) == 2:
-            x = []
-            y = []
-            z = []
-
             try:
-                # Read file
-                with open(sys.argv[1], "r") as csv_file:
-                    plots = csv.DictReader(csv_file, delimiter=",")
-                    for row in plots:
-                        x.append(float(row["Ticks"]))
-                        y.append(float(row["Price"]))
-                        z.append(float(row["Open-Interest"]))
+                # Read data into x,y,z arrays
+                readData(sys.argv[1])
+                if (
+                    settings.ENABLE_HORIZONTAL_LINES_ON_HOVER
+                    or settings.ENABLE_VERTICAL_LINES_ON_HOVER
+                ):
+                    print("hello")
+                    # Enable onHoverEffect
+                    plt.connect("motion_notify_event", onMouseEvent)
+
                 # INIT PRICE CHART
-                ax1[0].plot(x, y, color="tab:red", linewidth=1)
-                ax1[0].set_ylabel("Price", color="tab:red")
+                ax1[0].plot(x, y, color=price_color, linewidth=1)
+                ax1[0].set_ylabel("Price", color=price_color)
+                ax1[0].set_xlim(xmin=-5, xmax=x[-1] + 25)  # no empty space on left side
                 # INIT OPEN-INTEREST CHART
-                ax1[1].plot(x, z, color="tab:purple", linewidth=1)
-                ax1[1].set_xlabel("Ticks (1 tick = 5s)", color="tab:purple")
-                ax1[1].set_ylabel("Open Interest", color="tab:purple")
+                ax1[1].plot(x, z, color=interest_color, linewidth=1)
+                ax1[1].set_xlabel("Ticks (1 tick = 5s)", color=interest_color)
+                ax1[1].set_ylabel("Open Interest", color=interest_color)
+                ax1[1].set_xlim(
+                    xmin=-5, xmax=x[-1] + 25
+                )  # no empty space on left/right side
 
                 plt.tight_layout()
                 plt.show()
