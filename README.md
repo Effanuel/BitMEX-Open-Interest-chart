@@ -34,6 +34,10 @@ INTEREST_LINE_COLOR = "red"
 
 # To export data to new file, to read later
 EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE = False
+
+# True or False // Currently doesnt work with live data
+ENABLE_VERTICAL_LINES_ON_HOVER = True
+ENABLE_HORIZONTAL_LINES_ON_HOVER = False
 ```
 
 ### Built With
@@ -62,7 +66,7 @@ _(Freshly created account with API keys also works)_
 
 ### Installation
 
-1. **Clone the repo** or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v2.0.zip):
+1. **Clone the repo** or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v2.1.zip):
 
 ```sh
 git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
