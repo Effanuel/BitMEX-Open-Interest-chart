@@ -66,7 +66,7 @@ _(Freshly created account with API keys also works)_
 
 ### Installation
 
-1. **Clone the repo** or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v2.1.1.zip):
+1. **Clone the repo** or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/master.zip):
 
 ```sh
 git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
