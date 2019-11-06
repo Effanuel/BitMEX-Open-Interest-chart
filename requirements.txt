@@ -3,3 +3,4 @@ future==0.18.0
 websocket==0.2.1
 matplotlib==3.1.1
 websocket-client==0.56.0
+pandas==0.25.3
