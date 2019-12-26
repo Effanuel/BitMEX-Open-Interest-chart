@@ -26,6 +26,7 @@ fig, ax1 = plt.subplots(2)
 ticks_array = []
 price_data = []
 open_interest_data = []
+time_data = []
 
 # Colors for the chart
 color_arr = [
@@ -73,9 +74,9 @@ def readData(file_name) -> None:
     with open(file_name, "r") as csv_file:
         plots = csv.DictReader(csv_file, delimiter=",")
         for row in plots:
-            x.append(float(row["Ticks"]))
             y.append(float(row["Price"]))
             z.append(float(row["Open-Interest"]))
+        x.extend(list(range(0, len(y)))) # Ticks
 
 
 def onMouseEvent(event):
@@ -114,18 +115,20 @@ class Chart(OrderManager):
     """A class to initialize charting. Inheritance from sample-market-maker class OrderManager"""
 
     def animate(self, i) -> None:
+        # Gets websocket XBTUSD data
+        exchange_data = self.exchange.get_instrument("XBTUSD")
+        # Gets current price of XBTUSD
+        price_tick = exchange_data["lastPrice"]
+        # Gets Open Interest of XBTUSD
+        open_interest_tick = exchange_data["openInterest"] / 1000000
+        # Gets timestamp of last price of XBTUSD
+        time_tick = exchange_data["timestamp"]
 
         # On each iteration appends values to an array to display later
         ticks_array.append(i)
-        # Gets current price of XBTUSD
-        price_tick = self.exchange.get_instrument("XBTUSD")["lastPrice"]
-        # Gets Open Interest of XBTUSD
-        open_interest_tick = (
-            self.exchange.get_instrument("XBTUSD")["openInterest"] / 1000000
-        )
-
         price_data.append(price_tick)
         open_interest_data.append(open_interest_tick)
+        time_data.append(time_tick)
 
         # INIT PRICE CHART
         ax1[0].ticklabel_format(useOffset=False)
@@ -159,17 +162,18 @@ class Chart(OrderManager):
 
     # Exports collected data of price and OI to a file
     def export_data_to_csv(self, file_name) -> None:
-        print("hello")
+        print(f"---EXPORTING data to {file_name}---")
         # CSV headers
         data = {
-            "Ticks": ticks_array,
+            "Time": time_data,
             "Price": price_data,
             "Open-Interest": open_interest_data,
         }
         # Creates dataframe to export
-        df = DataFrame(data, columns=["Ticks", "Price", "Open-Interest"])
+        df = DataFrame(data, columns=["Time", "Price", "Open-Interest"])
         # Exports to file data.csv (not currently appending)
-        export_csv = df.to_csv(f"./{file_name}", index=None, header=True)
+        # For appending set header=False, and mode='a'
+        df.to_csv(f"./{file_name}", index=None, header=True)
 
 
 # MAIN FUNCTION
