@@ -1,7 +1,7 @@
 # BitMEX-Open-Interest-chart
 
 <p align="center"> 
-  <img src='https://github.com/Effanuel/BitMEX-Open-Interest-chart/blob/master/assets/chart.png'>
+  <img src='https://github.com/Effanuel/BitMEX-Open-Interest-chart/blob/master/assets/chart_v2.png'>
 </p>
 
 ## Table of Contents
@@ -21,10 +21,10 @@ This project is a program which displays BitMEX XBTUSD **current price** with **
 
 ### Current Features
 
+- **No authentication required** *(since v2.2)*;
 - Display XBTUSD price and Open Interest of XBTUSD every 5 seconds _(Open Interest is updated every 5 seconds so it makes sense to also update the price at the same interval)_;
 - Saves price and interest data to a file;
 - Read price/interest data to display on a chart;
-- **No authentication required**;
 - Customise chart colors and saved chart time in `settings.py` file:
 
 ```python
@@ -55,7 +55,7 @@ The majority of the code is taken from [Sample-market-maker](https://github.com/
 
 ### Installation
 
-1. **Clone the repo** or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/master.zip):
+1. **Clone the repo** or [download zip](https://github.com/Effanuel/BitMEX-Open-Interest-chart/archive/v2.2.zip):
 
 ```sh
 git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
@@ -101,7 +101,7 @@ python main.py data.csv
 git clone https://github.com/Effanuel/BitMEX-Open-Interest-chart.git
 cd Bitmex-Open-Interest-chart
 virtualenv open-interest
-.open-interest\Scripts\activate
+.\open-interest\Scripts\activate
 pip install -r requirements.txt
 python main.py
 ```
