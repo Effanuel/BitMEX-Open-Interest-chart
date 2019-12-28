@@ -22,6 +22,9 @@ mpl.rcParams["toolbar"] = "None"
 
 # Figures
 fig, ax1 = plt.subplots(2)
+# Window title
+fig = plt.gcf()
+fig.canvas.set_window_title('BitMEX price and open-interest chart')
 # Arrays to display data using matplotlib
 ticks_array = []
 price_data = []
@@ -50,7 +53,7 @@ else:
 if settings.INTEREST_LINE_COLOR in color_arr:
     interest_color = settings.INTEREST_LINE_COLOR
 else:
-    interest_color = "red"
+    interest_color = "orange"
 # Get line save time from settings
 if settings.SAVE_CHART_IN_SECONDS >= 300:  # 5 minutes
     save_time = settings.SAVE_CHART_IN_SECONDS / 5
@@ -125,10 +128,12 @@ class Chart(OrderManager):
         time_tick = exchange_data["timestamp"]
 
         # On each iteration appends values to an array to display later
+
         ticks_array.append(i)
         price_data.append(price_tick)
         open_interest_data.append(open_interest_tick)
         time_data.append(time_tick)
+
 
         # INIT PRICE CHART
         ax1[0].ticklabel_format(useOffset=False)
@@ -150,6 +155,13 @@ class Chart(OrderManager):
         ax1[1].grid(color="w", linestyle="-", linewidth=0.1)
 
         plt.tight_layout()
+        # Clear arrays to save from a memory leak
+        # if len(price_data)-save_time % 3 == 0:
+        #     print('cleared array')
+        #     self.export_data_to_csv()
+        #     del price_data[:]
+        #     del open_interest_data[:]
+        #     del time_data[:]
 
     def chart(self) -> None:
 
@@ -161,7 +173,7 @@ class Chart(OrderManager):
         pass
 
     # Exports collected data of price and OI to a file
-    def export_data_to_csv(self, file_name) -> None:
+    def export_data_to_csv(self, file_name=settings.EXPORT_TO_FILE_NAME, mode='a', header=False) -> None:
         print(f"---EXPORTING data to {file_name}---")
         # CSV headers
         data = {
@@ -173,7 +185,7 @@ class Chart(OrderManager):
         df = DataFrame(data, columns=["Time", "Price", "Open-Interest"])
         # Exports to file data.csv (not currently appending)
         # For appending set header=False, and mode='a'
-        df.to_csv(f"./{file_name}", index=None, header=True)
+        df.to_csv(f"./{file_name}", mode=mode, index=None, header=header)
 
 
 # MAIN FUNCTION
@@ -217,7 +229,7 @@ def run_program() -> None:
         else:
             chart = Chart()  # Is alive while the chart window is opened
             if settings.EXPORT_DATA_TO_FILE_AFTER_CHART_CLOSE is True:
-                chart.export_data_to_csv("data.csv")  # Export data to csv file
+                chart.export_data_to_csv()  # Export data to csv file
             else:
                 sys.exit()  # Closes the program if chart window is closed
     except (KeyboardInterrupt, SystemExit):
