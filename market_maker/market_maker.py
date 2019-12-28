@@ -41,8 +41,8 @@ class ExchangeInterface:
         self.bitmex = bitmex.BitMEX(
             base_url=settings.BASE_URL,
             symbol=self.symbol,
-            apiKey=settings.API_KEY,
-            apiSecret=settings.API_SECRET,
+            # apiKey=settings.API_KEY,
+            # apiSecret=settings.API_SECRET,
             orderIDPrefix="mm_bitmex_",
             postOnly=False,
             timeout=7,
@@ -53,20 +53,6 @@ class ExchangeInterface:
             symbol = self.symbol
         return self.bitmex.instrument(symbol)
 
-    def get_margin(self):
-        if self.dry_run:
-            return {"marginBalance": float(50), "availableFunds": float(50)}
-        return self.bitmex.funds()
-
-    def get_position(self, symbol=None):
-        if symbol is None:
-            symbol = self.symbol
-        return self.bitmex.position(symbol)
-
-    def get_ticker(self, symbol=None):
-        if symbol is None:
-            symbol = self.symbol
-        return self.bitmex.ticker_data(symbol)
 
     def is_open(self):
         """Check that websockets are still open."""
