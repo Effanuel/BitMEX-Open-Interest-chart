@@ -7,7 +7,7 @@ from time import sleep
 import json
 import decimal
 import logging
-from market_maker.settings import settings
+# from market_maker.settings import settings
 from market_maker.auth.APIKeyAuth import generate_expires, generate_signature
 from market_maker.utils.log import setup_custom_logger
 from market_maker.utils.math import toNearest
@@ -37,7 +37,7 @@ class BitMEXWebsocket():
     def __del__(self):
         self.exit()
 
-    def connect(self, endpoint="", symbol="XBTN15", shouldAuth=True):
+    def connect(self, endpoint="", symbol="XBTUSD", shouldAuth=False):
         '''Connect to the websocket and initialize data stores.'''
 
         self.logger.debug("Connecting WebSocket.")
@@ -48,10 +48,10 @@ class BitMEXWebsocket():
         # Subscribe to all pertinent endpoints
         subscriptions = [sub + ':' + symbol for sub in ["quote", "trade"]]
         # subscriptions += ["instrument"]  # We want all of them
-        if self.shouldAuth:
-            subscriptions += [sub + ':' + symbol for sub in ["order", "execution"]]
-            subscriptions += ["margin", "position"]
-        subscriptions += ['instrument']
+        # if self.shouldAuth:
+        #     subscriptions += [sub + ':' + symbol for sub in ["order", "execution"]]
+        #     subscriptions += ["margin", "position"]
+        subscriptions += ['instrument:XBTUSD']
         # Get WS URL and connect.
         urlParts = list(urlparse(endpoint))
         urlParts[0] = urlParts[0].replace('http', 'ws')
@@ -104,29 +104,11 @@ class BitMEXWebsocket():
         # The instrument has a tickSize. Use it to round values.
         return {k: toNearest(float(v or 0), instrument['tickSize']) for k, v in iteritems(ticker)}
 
-    def funds(self):
-        return self.data['margin'][0]
+
 
     def market_depth(self, symbol):
         raise NotImplementedError('orderBook is not subscribed; use askPrice and bidPrice on instrument')
         # return self.data['orderBook25'][0]
-
-    def open_orders(self, clOrdIDPrefix):
-        orders = self.data['order']
-        # Filter to only open orders (leavesQty > 0) and those that we actually placed
-        return [o for o in orders if str(o['clOrdID']).startswith(clOrdIDPrefix) and o['leavesQty'] > 0]
-
-    def position(self, symbol):
-        positions = self.data['position']
-        pos = [p for p in positions if p['symbol'] == symbol]
-        if len(pos) == 0:
-            # No position found; stub it
-            return {'avgCostPrice': 0, 'avgEntryPrice': 0, 'currentQty': 0, 'symbol': symbol}
-        return pos[0]
-
-    def recent_trades(self):
-        return self.data['trade']
-
     #
     # Lifecycle methods
     #
@@ -154,10 +136,10 @@ class BitMEXWebsocket():
                                          on_close=self.__on_close,
                                          on_open=self.__on_open,
                                          on_error=self.__on_error,
-                                         header=self.__get_auth()
+                                        #  header=self.__get_auth()
                                          )
 
-        setup_custom_logger('websocket', log_level=settings.LOG_LEVEL)
+        setup_custom_logger('websocket')
         self.wst = threading.Thread(target=lambda: self.ws.run_forever(sslopt=sslopt_ca_certs))
         self.wst.daemon = True
         self.wst.start()
@@ -174,27 +156,21 @@ class BitMEXWebsocket():
             self.exit()
             sys.exit(1)
 
-    def __get_auth(self):
-        '''Return auth headers. Will use API Keys if present in settings.'''
+    # def __get_auth(self):
+    #     '''Return auth headers. Will use API Keys if present in settings.'''
 
-        if self.shouldAuth is False:
-            return []
+    #     if self.shouldAuth is False:
+    #         return []
 
-        self.logger.info("Authenticating with API Key.")
-        # To auth to the WS using an API key, we generate a signature of a nonce and
-        # the WS API endpoint.
-        nonce = generate_expires()
-        return [
-            "api-expires: " + str(nonce),
-            "api-signature: " + generate_signature(settings.API_SECRET, 'GET', '/realtime', nonce, ''),
-            "api-key:" + settings.API_KEY
-        ]
-
-    def __wait_for_account(self):
-        '''On subscribe, this data will come down. Wait for it.'''
-        # Wait for the keys to show up from the ws
-        while not {'margin', 'position', 'order'} <= set(self.data):
-            sleep(0.1)
+    #     self.logger.info("Authenticating with API Key.")
+    #     # To auth to the WS using an API key, we generate a signature of a nonce and
+    #     # the WS API endpoint.
+    #     nonce = generate_expires()
+    #     return [
+    #         "api-expires: " + str(nonce),
+    #         "api-signature: " + generate_signature(settings.API_SECRET, 'GET', '/realtime', nonce, ''),
+    #         "api-key:" + settings.API_KEY
+    #     ]
 
     def __wait_for_symbol(self, symbol):
         '''On subscribe, this data will come down. Wait for it.'''
